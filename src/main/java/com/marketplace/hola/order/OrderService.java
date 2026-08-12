@@ -142,6 +142,6 @@ public class OrderService {
 
     private String generateOrderNumber() {
         long next = orderRepository.count() + 1;
-        return String.format("LUM-%d%05d", Year.now().getValue(), next);
+        return String.format("HOL-%d%05d", Year.now().getValue(), next);
     }
 }

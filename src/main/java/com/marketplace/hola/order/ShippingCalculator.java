@@ -9,7 +9,7 @@ import java.util.Set;
 @Component
 public class ShippingCalculator {
 
-    private static final BigDecimal FREE_SHIPPING_THRESHOLD = new BigDecimal("800");
+    private static final BigDecimal FREE_SHIPPING_THRESHOLD = new BigDecimal("2000");
 
     private static final BigDecimal CAIRO_GIZA_FEE = new BigDecimal("75");
     private static final BigDecimal CANAL_DAMIETTA_FEE = new BigDecimal("95");
