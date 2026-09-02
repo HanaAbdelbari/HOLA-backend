@@ -5,9 +5,11 @@ import com.marketplace.hola.category.CategoryRepository;
 import com.marketplace.hola.product.dto.AdminProductDto;
 import com.marketplace.hola.product.dto.AdminProductDetailDto;
 import com.marketplace.hola.product.dto.ProductRequest;
+import com.marketplace.hola.product.dto.ProductVariantDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -87,7 +89,7 @@ public class AdminProductService {
             product.setIsActive(true);
         }
 
-        // Replace the images with the new list of URLs.
+        // Replace the images with the new list of URLs safely.
         product.getImages().clear();
         if (request.imageUrls() != null) {
             int order = 0;
@@ -100,5 +102,21 @@ public class AdminProductService {
                 product.getImages().add(image);
             }
         }
+
+        // Replace the variants using Product's setVariants to manage bidirectional link & orphanRemoval cleanly.
+        List<ProductVariant> newVariants = new ArrayList<>();
+        if (request.variants() != null) {
+            for (ProductVariantDto vDto : request.variants()) {
+                if (vDto.label() == null || vDto.label().isBlank()) continue;
+
+                ProductVariant variant = new ProductVariant();
+                variant.setLabel(vDto.label().trim());
+                variant.setPrice(vDto.price() != null ? vDto.price() : request.price());
+                variant.setStockQuantity(vDto.stockQuantity() != null ? vDto.stockQuantity() : 0);
+
+                newVariants.add(variant);
+            }
+        }
+        product.setVariants(newVariants);
     }
 }

@@ -59,6 +59,9 @@ public class Product {
     @OrderBy("displayOrder ASC")
     private List<ProductImage> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductVariant> variants = new ArrayList<>();
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -67,130 +70,81 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    protected Product() {
+    public Product() { // تم تغييره إلى public لسهولة الاصطناع في الـ Admin
     }
 
-    // "On sale" is computed, never stored — matches the schema decision.
     @Transient
     public boolean isOnSale() {
         return salePrice != null && salePrice.compareTo(price) < 0;
     }
 
-    // The price the customer actually pays right now.
     @Transient
     public BigDecimal getEffectivePrice() {
         return isOnSale() ? salePrice : price;
     }
 
-    public Long getId() {
-        return id;
+    // --- Helper Methods للـ Variants لضمان التوافق مع Hibernate ---
+    public void addVariant(ProductVariant variant) {
+        variants.add(variant);
+        variant.setProduct(this);
     }
 
-    public Category getCategory() {
-        return category;
+    public void removeVariant(ProductVariant variant) {
+        variants.remove(variant);
+        variant.setProduct(null);
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setVariants(List<ProductVariant> newVariants) {
+        this.variants.clear();
+        if (newVariants != null) {
+            newVariants.forEach(this::addVariant);
+        }
     }
 
-    public String getName() {
-        return name;
-    }
+    // Getters and Setters باقي
+    public Long getId() { return id; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
 
-    public String getSlug() {
-        return slug;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
+    public String getSlug() { return slug; }
+    public void setSlug(String slug) { this.slug = slug; }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public BigDecimal getPrice() { return price; }
+    public void setPrice(BigDecimal price) { this.price = price; }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
+    public BigDecimal getSalePrice() { return salePrice; }
+    public void setSalePrice(BigDecimal salePrice) { this.salePrice = salePrice; }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
+    public String getMaterial() { return material; }
+    public void setMaterial(String material) { this.material = material; }
 
-    public BigDecimal getSalePrice() {
-        return salePrice;
-    }
+    public String getSize() { return size; }
+    public void setSize(String size) { this.size = size; }
 
-    public void setSalePrice(BigDecimal salePrice) {
-        this.salePrice = salePrice;
-    }
+    public String getChainLength() { return chainLength; }
+    public void setChainLength(String chainLength) { this.chainLength = chainLength; }
 
-    public String getMaterial() {
-        return material;
-    }
+    public Integer getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
 
-    public void setMaterial(String material) {
-        this.material = material;
-    }
+    public Integer getDisplayOrder() { return displayOrder; }
+    public void setDisplayOrder(Integer displayOrder) { this.displayOrder = displayOrder; }
 
-    public String getSize() {
-        return size;
-    }
+    public Boolean getIsActive() { return isActive; }
+    public void setIsActive(Boolean isActive) { this.isActive = isActive; }
 
-    public void setSize(String size) {
-        this.size = size;
-    }
+    public List<ProductImage> getImages() { return images; }
+    public void setImages(List<ProductImage> images) { this.images = images; }
 
-    public String getChainLength() {
-        return chainLength;
-    }
+    public List<ProductVariant> getVariants() { return variants; }
 
-    public void setChainLength(String chainLength) {
-        this.chainLength = chainLength;
-    }
-
-    public Integer getStockQuantity() {
-        return stockQuantity;
-    }
-
-    public void setStockQuantity(Integer stockQuantity) {
-        this.stockQuantity = stockQuantity;
-    }
-
-    public Integer getDisplayOrder() {
-        return displayOrder;
-    }
-
-    public void setDisplayOrder(Integer displayOrder) {
-        this.displayOrder = displayOrder;
-    }
-
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public List<ProductImage> getImages() {
-        return images;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }

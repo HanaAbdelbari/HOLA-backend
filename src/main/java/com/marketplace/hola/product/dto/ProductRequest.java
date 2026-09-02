@@ -3,8 +3,6 @@ package com.marketplace.hola.product.dto;
 import java.math.BigDecimal;
 import java.util.List;
 
-// What the admin form sends to create or update a product.
-// imageUrls: list of image URLs (for now typed/pasted; later uploaded via Cloudinary).
 public record ProductRequest(
         Long categoryId,
         String name,
@@ -17,6 +15,7 @@ public record ProductRequest(
         String chainLength,
         Integer stockQuantity,
         Integer displayOrder,
-        List<String> imageUrls
+        List<String> imageUrls,
+        List<ProductVariantDto> variants
 ) {
 }

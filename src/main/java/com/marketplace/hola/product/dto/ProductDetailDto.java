@@ -6,11 +6,6 @@ import com.marketplace.hola.product.ProductImage;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Full product shape for the product details page.
- * Carries all images (the gallery) and the optional attributes.
- * Attributes are null when absent — the frontend hides them (schema rule).
- */
 public record ProductDetailDto(
         Long id,
         String name,
@@ -27,12 +22,17 @@ public record ProductDetailDto(
         boolean inStock,
         String categoryName,
         String categorySlug,
-        List<String> images
+        List<String> images,
+        List<ProductVariantDto> variants // 1. إضافة قائمة الـ Variants
 ) {
     public static ProductDetailDto from(Product p) {
         List<String> imageUrls = p.getImages().stream()
                 .map(ProductImage::getImageUrl)
-                .toList(); // already ordered by display_order
+                .toList();
+
+        List<ProductVariantDto> variantDtos = p.getVariants().stream()
+                .map(v -> new ProductVariantDto(v.getId(), v.getLabel(), v.getPrice(), v.getStockQuantity()))
+                .toList();
 
         return new ProductDetailDto(
                 p.getId(),
@@ -50,7 +50,8 @@ public record ProductDetailDto(
                 p.getStockQuantity() > 0,
                 p.getCategory().getName(),
                 p.getCategory().getSlug(),
-                imageUrls
+                imageUrls,
+                variantDtos // 2. تمرير الـ Variants
         );
     }
 
