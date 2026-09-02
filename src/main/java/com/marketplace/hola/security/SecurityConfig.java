@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     public SecurityConfig(
             JwtService jwtService,
-            @Value("${HOLA.cors.allowed-origin}") String allowedOrigin) { // <-- Fixed HOLA uppercase
+            @Value("${HOLA.cors.allowed-origin}") String allowedOrigin) {
         this.jwtService = jwtService;
         this.allowedOrigin = allowedOrigin;
     }
@@ -49,10 +49,10 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Public: storefront reads + placing an order + admin login
+                        .requestMatchers("/api/admin/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/products/**", "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/orders").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/orders/*").permitAll() // success page lookup by number
-                        .requestMatchers("/api/admin/login").permitAll()
                         // Everything under /api/admin (except login) requires ADMIN
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         // Anything else: allow (adjust later if needed)
