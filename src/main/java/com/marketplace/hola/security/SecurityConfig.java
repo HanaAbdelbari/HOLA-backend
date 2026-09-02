@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     public SecurityConfig(
             JwtService jwtService,
-            @Value("${hola.cors.allowed-origin}") String allowedOrigin) {
+            @Value("${HOLA.cors.allowed-origin}") String allowedOrigin) { // <-- Fixed HOLA uppercase
         this.jwtService = jwtService;
         this.allowedOrigin = allowedOrigin;
     }
@@ -41,8 +41,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // We use JWT, not sessions/cookies, so disable CSRF and sessions.
+                // We use JWT, not sessions/cookies, so disable CSRF, formLogin, httpBasic, and sessions.
                 .csrf(csrf -> csrf.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                .formLogin(formLogin -> formLogin.disable())
                 .cors(cors -> cors.configurationSource(corsSource()))
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
