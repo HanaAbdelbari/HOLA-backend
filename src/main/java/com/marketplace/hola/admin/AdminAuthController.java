@@ -1,10 +1,8 @@
 package com.marketplace.hola.admin;
 
 import com.marketplace.hola.security.JwtService;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -14,32 +12,25 @@ import java.util.Map;
 public class AdminAuthController {
 
     private final JwtService jwtService;
-    private final PasswordEncoder passwordEncoder;
-    // Now stores a BCrypt HASH of the password, not the plain text.
-    private final String adminPasswordHash;
+    private static final String PLAIN_ADMIN_PASSWORD = "haola@#2050";
 
-    public AdminAuthController(
-            JwtService jwtService,
-            PasswordEncoder passwordEncoder,
-            @Value("${HOLA.admin.password-hash}") String adminPasswordHash) { // <-- Fixed HOLA uppercase
+    public AdminAuthController(JwtService jwtService) {
         this.jwtService = jwtService;
-        this.passwordEncoder = passwordEncoder;
-        this.adminPasswordHash = adminPasswordHash;
     }
 
-    // POST /api/admin/login  { "password": "..." }
-    // Compares the entered password against the stored BCrypt hash.
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        if (request.password() == null
-                || !passwordEncoder.matches(request.password(), adminPasswordHash)) {
+    public ResponseEntity<?> login(@RequestBody Map<String, Object> body) {
+        String inputPassword = body.get("password") != null ? String.valueOf(body.get("password")).trim() : "";
+
+        System.out.println(">>> RECEIVED PASSWORD: [" + inputPassword + "]");
+        System.out.println(">>> EXPECTED PASSWORD: [" + PLAIN_ADMIN_PASSWORD + "]");
+
+        if (!PLAIN_ADMIN_PASSWORD.equals(inputPassword)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("message", "Incorrect password"));
         }
+
         String token = jwtService.generateToken("admin");
         return ResponseEntity.ok(Map.of("token", token));
-    }
-
-    public record LoginRequest(String password) {
     }
 }
