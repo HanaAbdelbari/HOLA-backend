@@ -21,7 +21,7 @@ public class AdminAuthController {
     public AdminAuthController(
             JwtService jwtService,
             PasswordEncoder passwordEncoder,
-            @Value("${hola.admin.password-hash}") String adminPasswordHash) {
+            @Value("${HOLA.admin.password-hash}") String adminPasswordHash) { // <-- Fixed HOLA uppercase
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
         this.adminPasswordHash = adminPasswordHash;
