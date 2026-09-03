@@ -28,6 +28,17 @@ public class OrderItem {
     // (If the product price changes later, this stays the same.)
     @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
     private BigDecimal unitPrice;
+    @Column(name = "variant_label")
+    private String variantLabel;
+
+    // Getter & Setter
+    public String getVariantLabel() {
+        return variantLabel;
+    }
+
+    public void setVariantLabel(String variantLabel) {
+        this.variantLabel = variantLabel;
+    }
 
     protected OrderItem() {
     }

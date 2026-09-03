@@ -28,6 +28,7 @@ public record AdminOrderDto(
 ) {
     public record AdminOrderItemDto(
             String productName,
+            String variantLabel, // حقل الفريانت/اللون للظهر عند الأدمن
             Integer quantity,
             BigDecimal unitPrice
     ) {
@@ -60,6 +61,7 @@ public record AdminOrderDto(
     private static AdminOrderItemDto toItemDto(OrderItem item) {
         return new AdminOrderItemDto(
                 item.getProduct().getName(),
+                item.getVariantLabel(), // جلب قيمة الفريانت من الـ Item
                 item.getQuantity(),
                 item.getUnitPrice()
         );

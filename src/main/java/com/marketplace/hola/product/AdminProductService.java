@@ -82,7 +82,7 @@ public class AdminProductService {
         product.setSalePrice(request.salePrice());
         product.setMaterial(request.material());
         product.setSize(request.size());
-        product.setChainLength(request.chainLength());
+        product.setDimensions(request.dimensions());
         product.setStockQuantity(request.stockQuantity() != null ? request.stockQuantity() : 0);
         product.setDisplayOrder(request.displayOrder() != null ? request.displayOrder() : 0);
         if (product.getIsActive() == null) {

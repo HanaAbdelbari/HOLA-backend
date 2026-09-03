@@ -107,7 +107,7 @@ public class ProductService {
         product.setSalePrice(request.salePrice());
         product.setMaterial(request.material());
         product.setSize(request.size());
-        product.setChainLength(request.chainLength());
+        product.setDimensions(request.dimensions());
         product.setStockQuantity(request.stockQuantity() != null ? request.stockQuantity() : 0);
         product.setDisplayOrder(request.displayOrder() != null ? request.displayOrder() : 0);
 
@@ -126,7 +126,7 @@ public class ProductService {
             product.getImages().clear();
             for (String url : request.imageUrls()) {
                 ProductImage image = new ProductImage();
-                image.setImageUrl(url); // إذا كان اسم الـ field مختلف بـ ProductImage (مثلاً setUrl)، عدليه هنا فقط
+                image.setImageUrl(url);
                 image.setProduct(product);
                 product.getImages().add(image);
             }

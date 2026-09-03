@@ -12,7 +12,7 @@ public record ProductRequest(
         BigDecimal salePrice,
         String material,
         String size,
-        String chainLength,
+        String dimensions,
         Integer stockQuantity,
         Integer displayOrder,
         List<String> imageUrls,

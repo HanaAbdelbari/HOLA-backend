@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.time.Year;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +50,10 @@ public class OrderService {
 
             BigDecimal unitPrice = product.getEffectivePrice();
 
+            // إنشاء الـ OrderItem مع تعيين الـ variantLabel المختار
             OrderItem item = new OrderItem(product, line.quantity(), unitPrice);
+            item.setVariantLabel(line.variantLabel());
+
             order.addItem(item);
 
             productsTotal = productsTotal.add(
@@ -62,7 +64,6 @@ public class OrderService {
         BigDecimal shipping = shippingCalculator.calculate(productsTotal, request.governorate());
         BigDecimal total = productsTotal.add(shipping);
 
-        // ⚡ التعديل هنا: تقريب الديبوزيت لأقرب 5 لأسفل بدون كسور ⚡
         double rawHalf = total.doubleValue() * 0.5;
         double roundedDeposit = Math.floor(rawHalf / 5.0) * 5.0;
         BigDecimal deposit = BigDecimal.valueOf(roundedDeposit);

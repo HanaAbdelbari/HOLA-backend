@@ -43,8 +43,8 @@ public class Product {
     @Column(length = 50)
     private String size;
 
-    @Column(name = "chain_length", length = 50)
-    private String chainLength;
+    @Column(length = 100)
+    private String dimensions;
 
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity = 0;
@@ -70,7 +70,7 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Product() { // تم تغييره إلى public لسهولة الاصطناع في الـ Admin
+    public Product() {
     }
 
     @Transient
@@ -101,7 +101,7 @@ public class Product {
         }
     }
 
-    // Getters and Setters باقي
+    // Getters and Setters
     public Long getId() { return id; }
 
     public Category getCategory() { return category; }
@@ -128,8 +128,8 @@ public class Product {
     public String getSize() { return size; }
     public void setSize(String size) { this.size = size; }
 
-    public String getChainLength() { return chainLength; }
-    public void setChainLength(String chainLength) { this.chainLength = chainLength; }
+    public String getDimensions() { return dimensions; }
+    public void setDimensions(String dimensions) { this.dimensions = dimensions; }
 
     public Integer getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }

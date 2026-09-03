@@ -18,16 +18,23 @@ public record AdminProductDetailDto(
         BigDecimal salePrice,
         String material,
         String size,
-        String chainLength,
+        String dimensions,
         Integer stockQuantity,
         Integer displayOrder,
         Boolean isActive,
-        List<String> images
+        List<String> images,
+        List<ProductVariantDto> variants
 ) {
     public static AdminProductDetailDto from(Product p) {
         List<String> imageUrls = p.getImages().stream()
                 .map(ProductImage::getImageUrl)
                 .toList();
+
+        // تحويل الـ Variants الحقيقية الموجودة في الـ Product إلى DTOs
+        List<ProductVariantDto> variantDtos = p.getVariants() != null
+                ? p.getVariants().stream().map(ProductVariantDto::from).toList()
+                : List.of();
+
         return new AdminProductDetailDto(
                 p.getId(),
                 p.getCategory() != null ? p.getCategory().getId() : null,
@@ -38,11 +45,12 @@ public record AdminProductDetailDto(
                 p.getSalePrice(),
                 p.getMaterial(),
                 p.getSize(),
-                p.getChainLength(),
+                p.getDimensions(),
                 p.getStockQuantity(),
                 p.getDisplayOrder(),
                 p.getIsActive(),
-                imageUrls
+                imageUrls,
+                variantDtos // تمرير الـ variants هنا لتظهر في الفورم
         );
     }
 }
